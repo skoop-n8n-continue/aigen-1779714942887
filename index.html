@@ -20,23 +20,88 @@
         .container {
             text-align: center;
         }
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+        .control-btn {
+            background: #00b7af;
+            color: #10181f;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+        .control-btn:hover {
+            opacity: 0.8;
+        }
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 35px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
         h1 {
             font-size: 4rem;
             color: #00b7af;
             margin: 0;
+            transition: font-size 0.2s, color 0.2s;
         }
         p {
             font-size: 1.5rem;
             opacity: 0.8;
+            transition: font-size 0.2s;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Hello World</h1>
-        <p>Welcome to your new app.</p>
+    <div class="container" id="content">
+        <h1 id="title">Hello World</h1>
+        <p id="subtitle">Welcome to your new app.</p>
     </div>
+
+    <div class="controls">
+        <button class="control-btn" onclick="adjustFont(1.1)">A+</button>
+        <button class="control-btn" onclick="adjustFont(0.9)">A-</button>
+        <input type="color" id="colorPicker" value="#00b7af" oninput="changeColor(this.value)">
+    </div>
+
   <script>
+    let currentScale = 1;
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+
+    function adjustFont(scale) {
+      currentScale *= scale;
+      // Clamp scale to reasonable bounds
+      currentScale = Math.min(Math.max(currentScale, 0.5), 3);
+
+      const baseH1 = 4;
+      const baseP = 1.5;
+
+      title.style.fontSize = `${baseH1 * currentScale}rem`;
+      subtitle.style.fontSize = `${baseP * currentScale}rem`;
+    }
+
+    function changeColor(color) {
+      title.style.color = color;
+    }
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('./sw.js')
